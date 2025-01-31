@@ -1,9 +1,11 @@
 plugins {
     id("java")
+    id("application")
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 group = "com.trup10ka.xiba"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 
 repositories {
     mavenCentral()

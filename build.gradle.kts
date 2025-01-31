@@ -7,11 +7,19 @@ plugins {
 group = "com.trup10ka.xiba"
 version = "0.0.1"
 
+/* ====  Utils  ==== */
+var jetbrainsAnnotationsVersion = "24.0.0"
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    
+    /* ====  Utils  ==== */
+    implementation("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")
+    
+    /* ==== JUnit 5 ==== */
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

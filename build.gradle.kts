@@ -7,6 +7,9 @@ plugins {
 group = "com.trup10ka.xiba"
 version = "0.0.1"
 
+/* ==== Config ==== */
+var hoconParserVersion = "3.8.1"
+
 /* ====  Utils  ==== */
 var jetbrainsAnnotationsVersion = "24.0.0"
 
@@ -15,6 +18,9 @@ repositories {
 }
 
 dependencies {
+    
+    /* ==== Config ==== */
+    implementation("com.electronwill.night-config:hocon:$hoconParserVersion")
     
     /* ====  Utils  ==== */
     implementation("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")

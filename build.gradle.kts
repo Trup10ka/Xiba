@@ -10,6 +10,10 @@ version = "0.0.1"
 /* ==== Config ==== */
 var hoconParserVersion = "3.8.1"
 
+/* ==== Logging ==== */
+var slf4j = "2.0.16"
+var logback = "1.5.15"
+
 /* ====  Utils  ==== */
 var jetbrainsAnnotationsVersion = "24.0.0"
 
@@ -21,6 +25,10 @@ dependencies {
     
     /* ==== Config ==== */
     implementation("com.electronwill.night-config:hocon:$hoconParserVersion")
+    
+    /* ==== Logging ==== */
+    implementation("org.slf4j:slf4j-api:$slf4j")
+    implementation("ch.qos.logback:logback-classic:$logback")
     
     /* ====  Utils  ==== */
     implementation("org.jetbrains:annotations:$jetbrainsAnnotationsVersion")

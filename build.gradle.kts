@@ -39,7 +39,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.trup10ka.kappa.Main")
+    mainClass.set("com.trup10ka.xiba.Main")
 }
 
 java {

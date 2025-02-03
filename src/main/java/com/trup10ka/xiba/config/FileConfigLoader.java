@@ -36,7 +36,7 @@ public class FileConfigLoader implements ConfigLoader
             fileConfig.load();
             checkIfAnyFiledInConfigIsMissing(fileConfig);
 
-
+            logger.info("Config file loaded successfully");
             return new XibaConfig(
                     fileConfig.get("host"),
                     fileConfig.get("port")

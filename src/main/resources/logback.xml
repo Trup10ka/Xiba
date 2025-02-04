@@ -13,11 +13,11 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/application.log</file>
 
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/archive/app-%d{yyyy-MM-dd_HH-mm-ss}.log.gz</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archive/app-%d{yyyy-MM-dd_HH}.log.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
-        </rollingPolicy>-->
+        </rollingPolicy>
 
         <encoder>
             <pattern>%date{HH:mm:ss} [%thread] [%logger{30}] %-5level - %msg%n</pattern>

@@ -3,12 +3,19 @@ package com.trup10ka.xiba;
 import ch.qos.logback.classic.LoggerContext;
 import com.trup10ka.xiba.config.FileConfigLoader;
 import com.trup10ka.xiba.config.XibaConfig;
+import com.trup10ka.xiba.util.ConsoleColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.AsynchronousServerSocketChannel;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CountDownLatch;
+
+import static com.trup10ka.xiba.util.ConsoleColor.RED;
+import static com.trup10ka.xiba.util.ConsoleUtil.println;
+import static com.trup10ka.xiba.util.LoggingUtil.compressLogFile;
 
 
 public class Main
@@ -58,7 +65,7 @@ public class Main
         cliThread.start();
     }
 
-    private static void keepServerRunning(XibaServer server) throws InterruptedException
+    private static void keepServerRunning(XibaServer server) throws InterruptedException, IOException
     {
         CountDownLatch latch = new CountDownLatch(1);
 
@@ -66,6 +73,7 @@ public class Main
             server.stop();
             LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
             context.stop();
+            archiveLog();
             latch.countDown();
         });
 
@@ -74,6 +82,21 @@ public class Main
         logger.info("Server shutdown hook initialized");
 
         latch.await();
+    }
+
+    private static void archiveLog()
+    {
+        try
+        {
+            compressLogFile(
+                    "logs/application.log",
+                    "logs/archive/application-" +LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".log.gz"
+            );
+        }
+        catch (IOException e)
+        {
+            println("Failed to archive log file, reason: " + e.getMessage(), RED);
+        }
     }
 
 }

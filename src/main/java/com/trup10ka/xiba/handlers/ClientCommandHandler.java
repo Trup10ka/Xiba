@@ -41,7 +41,7 @@ public class ClientCommandHandler implements CompletionHandler<Integer, Asynchro
         }
 
         Command commandInstance = CommandManager.getCommand(identifier);
-        byte[] result = commandInstance.execute(commandArguments).getBytes(StandardCharsets.US_ASCII);
+        byte[] result = (commandInstance.execute(commandArguments) + "\r\n").getBytes(StandardCharsets.US_ASCII);
         logger.info("Resolved command: {} to command instance: {}", command, commandInstance);
 
         client.write(ByteBuffer.wrap(result), client, clientInputReaderHandler);

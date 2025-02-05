@@ -1,9 +1,8 @@
-package com.trup10ka.xiba.handler;
+package com.trup10ka.xiba.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;

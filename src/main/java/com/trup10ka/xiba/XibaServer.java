@@ -1,6 +1,6 @@
 package com.trup10ka.xiba;
 
-import com.trup10ka.xiba.handler.ClientConnectionHandler;
+import com.trup10ka.xiba.handlers.ClientConnectionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import static com.trup10ka.xiba.util.ConsoleColor.RED;
 import static com.trup10ka.xiba.util.ConsoleUtil.println;
 
 

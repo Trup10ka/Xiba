@@ -1,4 +1,4 @@
-package com.trup10ka.xiba.handler;
+package com.trup10ka.xiba.handlers;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;

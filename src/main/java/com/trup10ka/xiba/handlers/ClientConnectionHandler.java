@@ -28,13 +28,10 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
     {
         logger.info("Accepted client connection from: {}", client);
 
-        // Accept more clients
         server.accept(server, this);
 
-        // Initialize client buffer
         clientBuffers.put(client, new StringBuilder());
 
-        // Start reading input from the client
         readFromClient(client);
     }
 
@@ -48,64 +45,6 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
     {
         ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
-        client.read(buffer, client, new CompletionHandler<Integer, AsynchronousSocketChannel>()
-        {
-            @Override
-            public void completed(Integer bytesRead, AsynchronousSocketChannel client)
-            {
-                if (bytesRead == -1)
-                {
-                    handleClientDisconnect(clientBuffers,client);
-                    return;
-                }
-
-                buffer.flip();
-                String receivedData = StandardCharsets.UTF_8.decode(buffer).toString();
-                buffer.clear();
-
-                if (processClientData(clientBuffers, client, receivedData))
-                {
-                    String command = clientBuffers.get(client).toString().trim();
-                    clientBuffers.get(client).setLength(0);
-                    handleCommand(client, command);
-                }
-                else
-                    readFromClient(client);
-            }
-
-            @Override
-            public void failed(Throwable exc, AsynchronousSocketChannel client)
-            {
-                logger.error("Failed to read from client: {}", exc.getMessage());
-                handleClientDisconnect(clientBuffers, client);
-            }
-        });
-    }
-
-    private void handleCommand(AsynchronousSocketChannel client, String command)
-    {
-        logger.info("Received command from client: {}", command);
-
-        if ("exit".equalsIgnoreCase(command))
-        {
-            handleClientDisconnect(clientBuffers, client);
-            return;
-        }
-
-        ByteBuffer responseBuffer = ByteBuffer.wrap(("You said: " + command + "\n").getBytes(StandardCharsets.UTF_8));
-        client.write(responseBuffer, client, new CompletionHandler<Integer, AsynchronousSocketChannel>()
-        {
-            @Override
-            public void completed(Integer result, AsynchronousSocketChannel attachment)
-            {
-                handleClientDisconnect(clientBuffers, client);
-            }
-
-            @Override
-            public void failed(Throwable exc, AsynchronousSocketChannel attachment)
-            {
-                logger.error("Failed to write response to client: {}", exc.getMessage());
-            }
-        });
+        client.read(buffer, client, new ClientInputReaderHandler(clientBuffers, buffer));
     }
 }

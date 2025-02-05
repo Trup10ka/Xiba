@@ -90,7 +90,7 @@ public class Main
         {
             compressLogFile(
                     "logs/application.log",
-                    "logs/archive/application-" +LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".log.gz"
+                    "logs/application-" +LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".log.gz"
             );
         }
         catch (IOException e)

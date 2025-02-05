@@ -1,29 +1,57 @@
 package com.trup10ka.xiba.handlers;
 
+import com.trup10ka.xiba.commands.Command;
+import com.trup10ka.xiba.commands.CommandIdentifier;
+import com.trup10ka.xiba.commands.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static com.trup10ka.xiba.util.ClientUtils.handleClientDisconnect;
+import static com.trup10ka.xiba.util.ClientUtils.sendErrorMessageToClient;
+
 
 public class ClientCommandHandler implements CompletionHandler<Integer, AsynchronousSocketChannel>
 {
     private static final Logger logger = LoggerFactory.getLogger(ClientCommandHandler.class);
 
-    private final Map<AsynchronousSocketChannel, StringBuilder> clientBuffers;
+    private final ClientInputReaderHandler clientInputReaderHandler;
 
-    public ClientCommandHandler(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers)
+    public ClientCommandHandler(ClientInputReaderHandler clientInputReaderHandler)
     {
-        this.clientBuffers = clientBuffers;
+        this.clientInputReaderHandler = clientInputReaderHandler;
+    }
+
+    public void executeCommand(String command, AsynchronousSocketChannel client)
+    {
+        String commandCode = command.split(" ")[0];
+        String commandArguments = command.substring(commandCode.length()).trim();
+
+        CommandIdentifier identifier = CommandIdentifier.fromString(commandCode);
+        if (identifier == null)
+        {
+            logger.error("Client {} provided invalid command identifier: {}", client, commandCode);
+            sendErrorMessageToClient(client, "Invalid command identifier", clientInputReaderHandler);
+            return;
+        }
+
+        Command commandInstance = CommandManager.getCommand(identifier);
+        byte[] result = commandInstance.execute(commandArguments).getBytes(StandardCharsets.US_ASCII);
+        logger.info("Resolved command: {} to command instance: {}", command, commandInstance);
+
+        client.write(ByteBuffer.wrap(result), client, clientInputReaderHandler);
+        logger.info("Executed command: {} for client: {}", command, client);
     }
 
     @Override
     public void completed(Integer result, AsynchronousSocketChannel client)
     {
-        handleClientDisconnect(clientBuffers, client);
+        client.read(clientInputReaderHandler.getClientBuffer(), client, clientInputReaderHandler);
     }
 
     @Override

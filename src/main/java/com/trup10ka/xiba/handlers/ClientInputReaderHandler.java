@@ -26,7 +26,7 @@ public class ClientInputReaderHandler implements CompletionHandler<Integer, Asyn
     public ClientInputReaderHandler(AsynchronousSocketChannel client, ByteBuffer clientBuffer)
     {
         this.clientBuffer = clientBuffer;
-        this.clientCommandHandler = new ClientCommandHandler(clientBuffers, this);
+        this.clientCommandHandler = new ClientCommandHandler( this);
 
         clientBuffers.put(client, new StringBuilder());
     }

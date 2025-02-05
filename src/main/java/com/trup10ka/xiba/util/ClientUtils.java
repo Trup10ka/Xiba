@@ -31,10 +31,11 @@ public class ClientUtils
         sendErrorMessageToClient(client, "Unknown error occurred on the server", handler);
     }
 
-    public static void handleClientDisconnect(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers, AsynchronousSocketChannel client, String reason)
+    public static void handleClientDisconnect(AsynchronousSocketChannel client, String reason)
     {
-        logger.info("Client disconnected: {}", client);
-        clientBuffers.remove(client);
+        if (!client.isOpen())
+            return;
+        logger.info("Client disconnected: {}, reason: {}", client, reason);
         informClientAboutDisconnect(client, reason);
         try
         {
@@ -46,15 +47,13 @@ public class ClientUtils
         }
     }
 
-    public static void handleClientDisconnect(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers, AsynchronousSocketChannel client)
+    public static void handleClientDisconnect(AsynchronousSocketChannel client)
     {
-        handleClientDisconnect(clientBuffers, client, "Client disconnected");
+        handleClientDisconnect(client, "Client disconnected");
     }
 
-    public static boolean processClientData(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers, AsynchronousSocketChannel client, String receivedData)
+    public static boolean processClientData(StringBuilder clientBuffer, AsynchronousSocketChannel client, String receivedData)
     {
-        StringBuilder clientBuffer = clientBuffers.computeIfAbsent(client, k -> new StringBuilder());
-
         clientBuffer.append(receivedData);
 
         int newlineIndex = clientBuffer.indexOf("\n");

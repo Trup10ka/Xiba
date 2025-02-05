@@ -1,29 +1,28 @@
 package com.trup10ka.xiba.handlers;
 
+import com.trup10ka.xiba.XibaTimeoutDaemon;
 import com.trup10ka.xiba.commands.Command;
 import com.trup10ka.xiba.commands.CommandIdentifier;
 import com.trup10ka.xiba.commands.CommandManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import static com.trup10ka.xiba.util.ClientUtils.sendErrorMessageToClient;
 
 
-public class ClientCommandHandler implements CompletionHandler<Integer, AsynchronousSocketChannel>
+public class ClientCommandHandler extends ClientHandler<Integer, AsynchronousSocketChannel>
 {
     private static final Logger logger = LoggerFactory.getLogger(ClientCommandHandler.class);
 
     private final ClientInputReaderHandler clientInputReaderHandler;
 
-    public ClientCommandHandler(ClientInputReaderHandler clientInputReaderHandler)
+    public ClientCommandHandler(ClientInputReaderHandler clientInputReaderHandler, XibaTimeoutDaemon timeoutDaemon)
     {
+        super(timeoutDaemon);
         this.clientInputReaderHandler = clientInputReaderHandler;
     }
 
@@ -51,6 +50,7 @@ public class ClientCommandHandler implements CompletionHandler<Integer, Asynchro
     @Override
     public void completed(Integer result, AsynchronousSocketChannel client)
     {
+        getTimeoutDaemon().resetTimeout(client);
         client.read(clientInputReaderHandler.getClientBuffer(), client, clientInputReaderHandler);
     }
 

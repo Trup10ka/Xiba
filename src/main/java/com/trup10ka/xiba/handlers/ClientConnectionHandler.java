@@ -1,5 +1,6 @@
 package com.trup10ka.xiba.handlers;
 
+import com.trup10ka.xiba.XibaTimeoutDaemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,14 @@ import java.util.Map;
 
 import static com.trup10ka.xiba.util.ClientUtils.*;
 
-public class ClientConnectionHandler implements CompletionHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel>
+public class ClientConnectionHandler extends ClientHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel>
 {
     private final Logger logger = LoggerFactory.getLogger(ClientConnectionHandler.class);
+
+    public ClientConnectionHandler(XibaTimeoutDaemon timeoutDaemon)
+    {
+        super(timeoutDaemon);
+    }
 
     @Override
     public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server)
@@ -25,6 +31,7 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
 
         server.accept(server, this);
 
+        getTimeoutDaemon().scheduleTimeout(client);
         readFromClient(client);
     }
 
@@ -38,6 +45,6 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
     {
         ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
-        client.read(buffer, client, new ClientInputReaderHandler(client, buffer));
+        client.read(buffer, client, new ClientInputReaderHandler(client, buffer, getTimeoutDaemon()));
     }
 }

@@ -4,6 +4,8 @@ import ch.qos.logback.classic.LoggerContext;
 import com.trup10ka.xiba.commands.CommandManager;
 import com.trup10ka.xiba.config.FileConfigLoader;
 import com.trup10ka.xiba.config.XibaConfig;
+import com.trup10ka.xiba.data.BankClientsService;
+import com.trup10ka.xiba.data.FileBankClientsService;
 import com.trup10ka.xiba.util.ConsoleColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +30,15 @@ public class Main
         FileConfigLoader configLoader = new FileConfigLoader("config.conf");
         XibaConfig config = configLoader.loadConfig();
 
-        CommandManager.initCommands(config);
+        BankClientsService bankClientsService = new FileBankClientsService("clients.txt");
+
+        CommandManager.initCommands(config, bankClientsService);
 
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel
                 .open()
                 .bind(config.getSocketAddress());
 
-        XibaServer server = new XibaServer(serverSocketChannel);
+        XibaServer server = new XibaServer(serverSocketChannel, config);
         server.start();
 
         logger.info("Server started on: {}", config.getSocketAddress());

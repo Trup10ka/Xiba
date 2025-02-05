@@ -1,5 +1,6 @@
 package com.trup10ka.xiba;
 
+import com.trup10ka.xiba.config.XibaConfig;
 import com.trup10ka.xiba.handlers.ClientConnectionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,34 +8,35 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
 
 import static com.trup10ka.xiba.util.ConsoleUtil.println;
 
 
 public class XibaServer
 {
-    private static Logger logger = LoggerFactory.getLogger(XibaServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(XibaServer.class);
 
     private final AsynchronousServerSocketChannel serverSocketChannel;
 
-    private final Collection<AsynchronousSocketChannel> clientConnectionHandlers = Collections.synchronizedCollection(new ArrayList<>());
+    private final Map<AsynchronousSocketChannel, ScheduledFuture<?>> clientConnectionHandlers = Collections.synchronizedMap(new HashMap<>());
 
-    public XibaServer(AsynchronousServerSocketChannel serverSocketChannel)
+    private final XibaTimeoutDaemon timeoutDaemon;
+
+    public XibaServer(AsynchronousServerSocketChannel serverSocketChannel, XibaConfig config)
     {
         this.serverSocketChannel = serverSocketChannel;
+        this.timeoutDaemon = new XibaTimeoutDaemon(config, clientConnectionHandlers);
     }
 
     public void start()
     {
-        serverSocketChannel.accept(serverSocketChannel, new ClientConnectionHandler());
+        serverSocketChannel.accept(serverSocketChannel, new ClientConnectionHandler(timeoutDaemon));
     }
 
     public void stop()
     {
-
         try
         {
             closeAllSessions();
@@ -49,7 +51,7 @@ public class XibaServer
 
     private void closeAllSessions()
     {
-        clientConnectionHandlers.forEach(socket -> {
+        clientConnectionHandlers.forEach((socket, _) -> {
             try
             {
                 logger.info("Closing client socket channel: {}", socket);

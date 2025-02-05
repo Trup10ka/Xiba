@@ -1,5 +1,7 @@
-package com.trup10ka.xiba.commands;
+package com.trup10ka.xiba.commands.bank;
 
+import com.trup10ka.xiba.commands.Command;
+import com.trup10ka.xiba.commands.CommandIdentifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

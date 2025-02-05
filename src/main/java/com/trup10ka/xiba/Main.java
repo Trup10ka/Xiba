@@ -1,6 +1,7 @@
 package com.trup10ka.xiba;
 
 import ch.qos.logback.classic.LoggerContext;
+import com.trup10ka.xiba.commands.CommandManager;
 import com.trup10ka.xiba.config.FileConfigLoader;
 import com.trup10ka.xiba.config.XibaConfig;
 import com.trup10ka.xiba.util.ConsoleColor;
@@ -26,6 +27,8 @@ public class Main
     {
         FileConfigLoader configLoader = new FileConfigLoader("config.conf");
         XibaConfig config = configLoader.loadConfig();
+
+        CommandManager.initCommands(config);
 
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel
                 .open()

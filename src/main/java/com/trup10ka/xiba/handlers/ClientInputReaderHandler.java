@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.trup10ka.xiba.util.ClientUtils.handleClientDisconnect;
@@ -15,14 +17,18 @@ public class ClientInputReaderHandler implements CompletionHandler<Integer, Asyn
 {
     private static final Logger logger = LoggerFactory.getLogger(ClientInputReaderHandler.class);
 
-    private final Map<AsynchronousSocketChannel, StringBuilder> clientBuffers;
+    private final Map<AsynchronousSocketChannel, StringBuilder> clientBuffers = Collections.synchronizedMap(new HashMap<>());;
 
     private final ByteBuffer clientBuffer;
 
-    public ClientInputReaderHandler(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers, ByteBuffer clientBuffer)
+    private final ClientCommandHandler clientCommandHandler;
+
+    public ClientInputReaderHandler(AsynchronousSocketChannel client, ByteBuffer clientBuffer)
     {
-        this.clientBuffers = clientBuffers;
         this.clientBuffer = clientBuffer;
+        this.clientCommandHandler = new ClientCommandHandler(clientBuffers, this);
+
+        clientBuffers.put(client, new StringBuilder());
     }
 
     @Override
@@ -35,7 +41,7 @@ public class ClientInputReaderHandler implements CompletionHandler<Integer, Asyn
         }
 
         clientBuffer.flip();
-        String receivedData = StandardCharsets.UTF_8.decode(clientBuffer).toString();
+        String receivedData = StandardCharsets.US_ASCII.decode(clientBuffer).toString();
         clientBuffer.clear();
 
         if (processClientData(clientBuffers, client, receivedData))
@@ -59,13 +65,19 @@ public class ClientInputReaderHandler implements CompletionHandler<Integer, Asyn
     {
         logger.info("Received input: {} from client: {}", command, client);
 
-        if ("exit".equalsIgnoreCase(command))
+        if (command.isBlank())
         {
-            handleClientDisconnect(clientBuffers, client);
+            client.read(clientBuffer, client, this);
             return;
         }
 
-        ByteBuffer responseBuffer = ByteBuffer.wrap(("You said: " + command + "\n").getBytes(StandardCharsets.UTF_8));
-        client.write(responseBuffer, client, new ClientCommandHandler(clientBuffers));
+        //ByteBuffer responseBuffer = ByteBuffer.wrap(("You said: " + command + "\n").getBytes(StandardCharsets.UTF_8));
+        //client.write(responseBuffer, client, new ClientCommandHandler(clientBuffers));
+        clientCommandHandler.executeCommand(command, client);
+    }
+
+    public ByteBuffer getClientBuffer()
+    {
+        return clientBuffer;
     }
 }

@@ -12,16 +12,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.trup10ka.xiba.util.ClientUtils.handleClientDisconnect;
-import static com.trup10ka.xiba.util.ClientUtils.processClientData;
+import static com.trup10ka.xiba.util.ClientUtils.*;
 
 public class ClientConnectionHandler implements CompletionHandler<AsynchronousSocketChannel, AsynchronousServerSocketChannel>
 {
     private final Logger logger = LoggerFactory.getLogger(ClientConnectionHandler.class);
-
-    private static final int BUFFER_SIZE = 1024;
-
-    private final Map<AsynchronousSocketChannel, StringBuilder> clientBuffers = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public void completed(AsynchronousSocketChannel client, AsynchronousServerSocketChannel server)
@@ -29,8 +24,6 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
         logger.info("Accepted client connection from: {}", client);
 
         server.accept(server, this);
-
-        clientBuffers.put(client, new StringBuilder());
 
         readFromClient(client);
     }
@@ -45,6 +38,6 @@ public class ClientConnectionHandler implements CompletionHandler<AsynchronousSo
     {
         ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
-        client.read(buffer, client, new ClientInputReaderHandler(clientBuffers, buffer));
+        client.read(buffer, client, new ClientInputReaderHandler(client, buffer));
     }
 }

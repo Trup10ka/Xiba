@@ -5,11 +5,31 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 import java.util.Map;
 
 public class ClientUtils
 {
     private static final Logger logger = LoggerFactory.getLogger(ClientUtils.class);
+
+    public static final int BUFFER_SIZE = 1024;
+
+    public static void sendErrorMessageToClient(AsynchronousSocketChannel client, String message, CompletionHandler<Integer, AsynchronousSocketChannel> handler)
+    {
+        try
+        {
+            client.write(ByteBuffer.wrap(("ER " + message).getBytes()), client, handler);
+        }
+        catch (Exception e)
+        {
+            logger.error("Failed to send error message to client {}: {}", e.getMessage(), client);
+        }
+    }
+
+    public void sendErrorMessageToClient(AsynchronousSocketChannel client, CompletionHandler<Integer, AsynchronousSocketChannel> handler)
+    {
+        sendErrorMessageToClient(client, "Unknown error occurred on the server", handler);
+    }
 
     public static void handleClientDisconnect(Map<AsynchronousSocketChannel, StringBuilder> clientBuffers, AsynchronousSocketChannel client, String reason)
     {

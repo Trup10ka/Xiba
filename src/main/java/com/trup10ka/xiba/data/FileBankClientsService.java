@@ -118,6 +118,7 @@ public class FileBankClientsService implements BankClientsService
     @Override
     public long getNumberOfClients()
     {
+        numberOfClients = loadClients().size();
         return numberOfClients;
     }
 

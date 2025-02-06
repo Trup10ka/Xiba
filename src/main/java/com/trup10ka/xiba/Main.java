@@ -30,7 +30,8 @@ public class Main
         FileConfigLoader configLoader = new FileConfigLoader("config.conf");
         XibaConfig config = configLoader.loadConfig();
 
-        BankClientsService bankClientsService = new FileBankClientsService("clients.txt");
+        FileBankClientsService bankClientsService = new FileBankClientsService("clients.txt", config);
+        bankClientsService.initCursor();
 
         CommandManager.initCommands(config, bankClientsService);
 
@@ -72,21 +73,11 @@ public class Main
         cliThread.start();
     }
 
-    private static void keepServerRunning(XibaServer server) throws InterruptedException, IOException
+    private static void keepServerRunning(XibaServer server) throws InterruptedException
     {
         CountDownLatch latch = new CountDownLatch(1);
 
-        Thread shutdownHook = new Thread(() -> {
-            server.stop();
-            LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-            context.stop();
-            archiveLog();
-            latch.countDown();
-        });
-
-        Runtime.getRuntime().addShutdownHook(shutdownHook);
-
-        logger.info("Server shutdown hook initialized");
+        initShutdownHook(server, latch);
 
         latch.await();
     }
@@ -106,4 +97,20 @@ public class Main
         }
     }
 
+    private static void initShutdownHook(XibaServer server, CountDownLatch latch) throws InterruptedException
+    {
+        Thread shutdownHook = new Thread(() -> {
+            server.stop();
+            LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+            context.stop();
+            archiveLog();
+            latch.countDown();
+        });
+
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+
+        logger.info("Server shutdown hook initialized");
+
+        latch.await();
+    }
 }

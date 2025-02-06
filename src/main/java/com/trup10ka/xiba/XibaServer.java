@@ -1,5 +1,7 @@
 package com.trup10ka.xiba;
 
+import com.trup10ka.xiba.config.ConfigLoader;
+import com.trup10ka.xiba.config.FileConfigLoader;
 import com.trup10ka.xiba.config.XibaConfig;
 import com.trup10ka.xiba.handlers.ClientConnectionHandler;
 import org.slf4j.Logger;
@@ -14,6 +16,10 @@ import java.util.concurrent.ScheduledFuture;
 public class XibaServer
 {
     private static final Logger logger = LoggerFactory.getLogger(XibaServer.class);
+
+    private static final ConfigLoader configLoader = new FileConfigLoader("config.conf");
+
+    private static final XibaConfig config = configLoader.loadConfig();
 
     private final AsynchronousServerSocketChannel serverSocketChannel;
 
@@ -61,5 +67,10 @@ public class XibaServer
         });
 
         logger.info("All client socket channels closed");
+    }
+
+    public static XibaConfig getConfig()
+    {
+        return config;
     }
 }

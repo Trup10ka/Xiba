@@ -26,7 +26,7 @@ public class CommandManager
         commands.put(ACCOUNT_CREATE, new AccountCreateCommand(ACCOUNT_CREATE, bankClientsService, config.getSocketAddress()));
         commands.put(ACCOUNT_DEPOSIT, new AccountDepositCommand(ACCOUNT_DEPOSIT, bankClientsService));
         commands.put(ACCOUNT_WITHDRAWAL, new AccountWithdrawalCommand(ACCOUNT_WITHDRAWAL, bankClientsService));
-        commands.put(ACCOUNT_BALANCE, new AccountBalanceCommand(ACCOUNT_BALANCE, bankClientsService));
+        commands.put(ACCOUNT_BALANCE, new AccountBalanceCommand(ACCOUNT_BALANCE, bankClientsService, config.getSocketAddress()));
         commands.put(ACCOUNT_REMOVE, new AccountRemoveCommand(ACCOUNT_REMOVE, bankClientsService));
     }
 

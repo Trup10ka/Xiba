@@ -15,13 +15,25 @@ public abstract class BankServiceCommand extends Command
 
     protected int parseAccountNumber(String args) throws NumberFormatException
     {
-        return args.split("/").length > 1 ? Integer.parseInt(args.split("/")[1]) : -1;
+        return args.split("/").length > 1 ? Integer.parseInt(args.split("/")[0]) : -1;
     }
 
     protected String parseSocketAddress(String args)
     {
         String[] parts = args.split("/");
-        return parts.length > 1 ? parts[1] : "";
+        String ip = parts.length > 1 ? parts[1] : "";
+        if (!isValidIpAddress(ip))
+        {
+            return "";
+        }
+        return ip;
+    }
+
+    private boolean isValidIpAddress(String ip)
+    {
+        String ipPattern =
+                "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        return ip.matches(ipPattern);
     }
 
     protected int parseValue(String args) throws NumberFormatException

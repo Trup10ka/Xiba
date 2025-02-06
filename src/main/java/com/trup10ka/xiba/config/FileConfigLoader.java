@@ -39,8 +39,24 @@ public class FileConfigLoader implements ConfigLoader
             logger.info("Config file loaded successfully");
             return new XibaConfig(
                     fileConfig.get("host"),
-                    fileConfig.get("port")
+                    fileConfig.get("port"),
+                    new XibaConfig.Timeouts(
+                            fileConfig.get("timeouts.client"),
+                            fileConfig.get("timeouts.session")
+                    ),
+                    new XibaConfig.Ranges(
+                            fileConfig.get("ranges.minAccountNumber"),
+                            fileConfig.get("ranges.maxAccountNumber"),
+                            fileConfig.get("ranges.minPort"),
+                            fileConfig.get("ranges.maxPort")
+                    )
             );
+        }
+        catch (NullPointerException e)
+        {
+            logger.error("You are missing a value in configuration file, missing field: {}", e.getMessage());
+            System.exit(1);
+            return null;
         }
         catch (NoFormatFoundException e)
         {

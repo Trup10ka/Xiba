@@ -4,6 +4,7 @@ import com.trup10ka.xiba.config.XibaConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -34,6 +35,7 @@ public class XibaTimeoutDaemon
         clientConnectionHandlers.put(client, scheduler.schedule(
                 () -> {
                     logger.warn("Client {} timed out", client);
+                    client.write(ByteBuffer.wrap("ER Timeout\r\n".getBytes()), client, null);
                     handleClientDisconnect(client, "Client timed out");
                 }, 5, TimeUnit.SECONDS)
         );

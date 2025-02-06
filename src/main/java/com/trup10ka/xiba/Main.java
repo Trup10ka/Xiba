@@ -28,22 +28,19 @@ public class Main
 
     public static void main(String[] args) throws IOException, InterruptedException
     {
-        FileConfigLoader configLoader = new FileConfigLoader("config.conf");
-        XibaConfig config = configLoader.loadConfig();
-
-        FileBankClientsService bankClientsService = new FileBankClientsService("clients.txt", config);
+        FileBankClientsService bankClientsService = new FileBankClientsService("clients.txt", XibaServer.getConfig());
         bankClientsService.initCursor();
 
-        CommandManager.initCommands(config, bankClientsService);
+        CommandManager.initCommands(XibaServer.getConfig(), bankClientsService);
 
         AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel
                 .open()
-                .bind(config.getSocketAddress());
+                .bind(XibaServer.getConfig().getSocketAddress());
 
-        XibaServer server = new XibaServer(serverSocketChannel, config);
+        XibaServer server = new XibaServer(serverSocketChannel, XibaServer.getConfig());
         server.start();
 
-        logger.info("Server started on: {}", config.getSocketAddress());
+        logger.info("Server started on: {}", XibaServer.getConfig().getSocketAddress());
 
         startCliForServer(server);
         keepServerRunning(server);

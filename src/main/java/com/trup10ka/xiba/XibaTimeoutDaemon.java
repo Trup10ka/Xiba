@@ -35,9 +35,9 @@ public class XibaTimeoutDaemon
         clientConnectionHandlers.put(client, scheduler.schedule(
                 () -> {
                     logger.warn("Client {} timed out", client);
-                    client.write(ByteBuffer.wrap("ER Timeout\r\n".getBytes()), client, null);
                     handleClientDisconnect(client, "Client timed out");
-                }, 5, TimeUnit.SECONDS)
+                    client.write(ByteBuffer.wrap("ER Timeout\r\n".getBytes()), client, null);
+                }, config.timeouts().clientTimeout(), TimeUnit.MILLISECONDS)
         );
     }
 

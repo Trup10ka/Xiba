@@ -31,7 +31,7 @@ public class ProxyClientConnectionHandler implements CompletionHandler<Void, Str
     {
         logger.info("Connected to {}:{}", address.getHostString(), address.getPort());
 
-        ByteBuffer buffer = ByteBuffer.wrap(command.getBytes());
+        ByteBuffer buffer = ByteBuffer.wrap((command + "\r\n").getBytes());
         channel.write(buffer, command, new ProxyClientCommandCallHandler(client, channel));
     }
 

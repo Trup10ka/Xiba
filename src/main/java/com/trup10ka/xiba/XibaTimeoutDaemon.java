@@ -16,6 +16,8 @@ import static com.trup10ka.xiba.util.ClientUtils.handleClientDisconnect;
 
 public class XibaTimeoutDaemon
 {
+    private static XibaTimeoutDaemon instance;
+
     private static final Logger logger = LoggerFactory.getLogger(XibaTimeoutDaemon.class);
 
     private final XibaConfig config;
@@ -26,6 +28,7 @@ public class XibaTimeoutDaemon
 
     public XibaTimeoutDaemon(XibaConfig config, Map<AsynchronousSocketChannel, ScheduledFuture<?>> clientConnectionHandlers)
     {
+        instance = this;
         this.config = config;
         this.clientConnectionHandlers = clientConnectionHandlers;
     }
@@ -59,5 +62,10 @@ public class XibaTimeoutDaemon
         {
             previousTask.cancel(false);
         }
+    }
+
+    public static XibaTimeoutDaemon getInstance()
+    {
+        return instance;
     }
 }

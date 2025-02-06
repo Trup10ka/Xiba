@@ -13,9 +13,9 @@ import java.util.concurrent.TimeoutException;
 
 import static com.trup10ka.xiba.util.ClientUtils.processClientData;
 
-public class ProxyClientResultHandler implements CompletionHandler<Integer, ByteBuffer>
+public class ProxyClientCommandResultHandler implements CompletionHandler<Integer, ByteBuffer>
 {
-    private static final Logger logger = LoggerFactory.getLogger(ProxyClientResultHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProxyClientCommandResultHandler.class);
 
     private final StringBuilder clientStringBuffer;
 
@@ -23,7 +23,7 @@ public class ProxyClientResultHandler implements CompletionHandler<Integer, Byte
 
     private final AsynchronousSocketChannel client;
 
-    public ProxyClientResultHandler(AsynchronousSocketChannel client, AsynchronousSocketChannel proxyClient)
+    public ProxyClientCommandResultHandler(AsynchronousSocketChannel client, AsynchronousSocketChannel proxyClient)
     {
         this.client = client;
         this.proxyClient = proxyClient;
@@ -45,9 +45,10 @@ public class ProxyClientResultHandler implements CompletionHandler<Integer, Byte
 
         if (processClientData(clientStringBuffer, proxyClient, receivedData))
         {
-            String command = clientStringBuffer.toString().trim();
+            String command = clientStringBuffer.toString();
             clientStringBuffer.setLength(0);
-            client.write(ByteBuffer.wrap(command.getBytes()), command, null);
+            logger.info("Received response from server {}: {}", proxyClient, command);
+            client.write(ByteBuffer.wrap(command.getBytes()), client, new ProxyClientReadResultHandler(client));
         }
         else
             proxyClient.read(clientBuffer, XibaServer.getConfig().timeouts().clientTimeout(), TimeUnit.MILLISECONDS, clientBuffer, this);

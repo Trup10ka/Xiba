@@ -33,11 +33,14 @@ public class XibaClient
         {
             try (AsynchronousSocketChannel testChannel = AsynchronousSocketChannel.open())
             {
-                testChannel.connect(new InetSocketAddress(targetIp, port)).get(config.timeouts().clientTimeout(), TimeUnit.MILLISECONDS);
+                logger.info("Trying to connect to {}:{}", targetIp, port);
+                testChannel.connect(new InetSocketAddress(targetIp, port)).get(500, TimeUnit.MILLISECONDS);
+                logger.info("Found bank on {}:{}", targetIp, port);
                 return port;
             }
-            catch (Exception ignored)
+            catch (Exception exception)
             {
+                logger.warn("Failed to connect to {}:{}, reason: {}", targetIp, port, exception.getMessage());
             }
         }
         return -1;
@@ -47,6 +50,6 @@ public class XibaClient
     {
         InetSocketAddress address = new InetSocketAddress(targetIp, targetPort);
 
-        proxyChannel.connect(address, command, new ProxyClientConnectionHandler(address, client,proxyChannel));
+        proxyChannel.connect(address, command, new ProxyClientConnectionHandler(address, client, proxyChannel));
     }
 }

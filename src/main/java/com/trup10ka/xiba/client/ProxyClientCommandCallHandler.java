@@ -9,6 +9,8 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.TimeUnit;
 
+import static com.trup10ka.xiba.util.ClientUtils.BUFFER_SIZE;
+
 
 public class ProxyClientCommandCallHandler implements CompletionHandler<Integer, String>
 {
@@ -45,7 +47,8 @@ public class ProxyClientCommandCallHandler implements CompletionHandler<Integer,
 
     private void receiveData()
     {
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        proxyChannel.read(buffer, XibaServer.getConfig().timeouts().clientTimeout(), TimeUnit.MILLISECONDS, buffer, new ProxyClientResultHandler(client, proxyChannel));
+        ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+        logger.warn("Reading data from server of client {}", proxyChannel);
+        proxyChannel.read(buffer, XibaServer.getConfig().timeouts().clientTimeout(), TimeUnit.MILLISECONDS, buffer, new ProxyClientCommandResultHandler(client, proxyChannel));
     }
 }

@@ -14,6 +14,8 @@ public class ClientUtils
 
     public static final int BUFFER_SIZE = 1024;
 
+    public static final String PROXY_SIGN = "PR";
+
     public static void sendErrorMessageToClient(AsynchronousSocketChannel client, String message, CompletionHandler<Integer, AsynchronousSocketChannel> handler)
     {
         try

@@ -1,22 +1,25 @@
 package com.trup10ka.xiba.data;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public interface BankClientsService
 {
-    void addClient(int accountNumber);
+    boolean addClient();
 
-    void removeClient(int accountNumber);
+    boolean removeClient(int accountNumber);
 
-    boolean clientExists(int accountNumber);
-
-    void deposit(int accountNumber, long amount);
+    boolean deposit(int accountNumber, long amount);
 
     BigInteger getBalance(int accountNumber);
 
-    void withdraw(int accountNumber, long amount);
+    boolean withdraw(int accountNumber, long amount);
 
     long getTotalBalance();
 
     long getNumberOfClients();
+
+    boolean saveClient(BankAccount account);
+
+    List<BankAccount> loadClients();
 }

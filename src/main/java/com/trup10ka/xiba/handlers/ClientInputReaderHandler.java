@@ -39,7 +39,7 @@ public class ClientInputReaderHandler extends ClientHandler<Integer, Asynchronou
             handleClientDisconnect(client);
             return;
         }
-
+        logger.info("Read {} bytes from client: {}", bytesRead, client);
         clientBuffer.flip();
         String receivedData = StandardCharsets.US_ASCII.decode(clientBuffer).toString();
         clientBuffer.clear();

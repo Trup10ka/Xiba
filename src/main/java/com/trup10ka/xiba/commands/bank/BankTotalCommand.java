@@ -17,6 +17,6 @@ public class BankTotalCommand extends BankServiceCommand
     @Override
     public @NotNull String execute(@Nullable String args)
     {
-        return "";
+        return "BA " + getBankClientsService().getTotalBalance();
     }
 }

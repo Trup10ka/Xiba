@@ -20,6 +20,6 @@ public class BankCodeCommand extends Command
     @Override
     public @NotNull String execute(@Nullable String args)
     {
-        return "BC: " + address.getHostString();
+        return "BC " + address.getHostString();
     }
 }

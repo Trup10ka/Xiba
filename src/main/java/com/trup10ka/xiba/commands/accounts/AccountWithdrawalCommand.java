@@ -1,20 +1,26 @@
 package com.trup10ka.xiba.commands.accounts;
 
+import com.trup10ka.xiba.commands.BankServiceCommand;
 import com.trup10ka.xiba.commands.Command;
 import com.trup10ka.xiba.commands.CommandIdentifier;
+import com.trup10ka.xiba.data.BankClientsService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AccountWithdrawalCommand extends Command
+public class AccountWithdrawalCommand extends BankServiceCommand
 {
-    public AccountWithdrawalCommand(@NotNull CommandIdentifier identifier)
+    public AccountWithdrawalCommand(@NotNull CommandIdentifier identifier, BankClientsService bankClientsService)
     {
-        super(identifier);
+        super(identifier, bankClientsService);
     }
 
     @Override
     public @NotNull String execute(@Nullable String args)
     {
+        // TODO: Parse the string args
+
+
+        boolean result = getBankClientsService().withdraw(0,0);
         return "";
     }
 }

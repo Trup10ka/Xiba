@@ -27,7 +27,6 @@ public class AccountBalanceCommand extends BankServiceCommand
     @Override
     public @NotNull String execute(@Nullable String args)
     {
-        //  	AB <account>/<ip>
         CommandArguments parsedArguments = parseArguments(args);
         if (parsedArguments.account() == -1)
         {
@@ -42,21 +41,5 @@ public class AccountBalanceCommand extends BankServiceCommand
             return "AB " + getBankClientsService().getBalance(parsedArguments.account()).toString();
         else
             return "ER Invalid IP address"; // TODO: implement proxying
-    }
-
-    private CommandArguments parseArguments(String args)
-    {
-
-        try
-        {
-            int account = parseAccountNumber(args);
-            String ip = parseSocketAddress(args);
-            return new CommandArguments(account, ip, null);
-        }
-        catch (NumberFormatException e)
-        {
-            logger.error("Failed to parse account number, invalid format", e);
-            return new CommandArguments(-1, "", null, "Invalid account number format");
-        }
     }
 }

@@ -19,15 +19,52 @@ public class CommandManager
 
     public static void initCommands(XibaConfig config, BankClientsService bankClientsService)
     {
-        commands.put(BANK_CODE, new BankCodeCommand(BANK_CODE, config.getSocketAddress()));
-        commands.put(BANK_AMOUNT, new BankTotalCommand(BANK_AMOUNT, bankClientsService));
-        commands.put(BANK_NUMBER_OF_CLIENTS, new BankTotalClientsCommand(BANK_NUMBER_OF_CLIENTS, bankClientsService));
+        commands.put(BANK_CODE, new BankCodeCommand(
+                    BANK_CODE,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(BANK_AMOUNT, new BankTotalCommand(
+                    BANK_AMOUNT,
+                    bankClientsService
+                )
+        );
+        commands.put(BANK_NUMBER_OF_CLIENTS, new BankTotalClientsCommand(
+                    BANK_NUMBER_OF_CLIENTS,
+                    bankClientsService
+                )
+        );
 
-        commands.put(ACCOUNT_CREATE, new AccountCreateCommand(ACCOUNT_CREATE, bankClientsService, config.getSocketAddress()));
-        commands.put(ACCOUNT_DEPOSIT, new AccountDepositCommand(ACCOUNT_DEPOSIT, bankClientsService));
-        commands.put(ACCOUNT_WITHDRAWAL, new AccountWithdrawalCommand(ACCOUNT_WITHDRAWAL, bankClientsService));
-        commands.put(ACCOUNT_BALANCE, new AccountBalanceCommand(ACCOUNT_BALANCE, bankClientsService, config.getSocketAddress()));
-        commands.put(ACCOUNT_REMOVE, new AccountRemoveCommand(ACCOUNT_REMOVE, bankClientsService));
+        commands.put(ACCOUNT_CREATE, new AccountCreateCommand(
+                    ACCOUNT_CREATE,
+                    bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(ACCOUNT_DEPOSIT, new AccountDepositCommand(
+                    ACCOUNT_DEPOSIT,
+                    bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(ACCOUNT_WITHDRAWAL, new AccountWithdrawalCommand(
+                    ACCOUNT_WITHDRAWAL,
+                    bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(ACCOUNT_BALANCE, new AccountBalanceCommand(
+                    ACCOUNT_BALANCE,
+                    bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(ACCOUNT_REMOVE, new AccountRemoveCommand(
+                    ACCOUNT_REMOVE,
+                    bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
     }
 
     public static Command getCommand(CommandIdentifier identifier)

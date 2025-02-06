@@ -61,6 +61,12 @@ public class FileBankClientsService implements BankClientsService
     {
         List<BankAccount> accounts = loadClients();
         accounts.removeIf(account -> account.accountNumber() == accountNumber);
+        if (accounts.isEmpty())
+        {
+            clearFile();
+            numberOfClients = 0;
+            return true;
+        }
         boolean success = saveClients(accounts);
         if (success)
             numberOfClients--;
@@ -71,11 +77,12 @@ public class FileBankClientsService implements BankClientsService
     @Override
     public boolean deposit(int accountNumber, long amount)
     {
+        BankAccount account = getClient(accountNumber);
         removeClient(accountNumber);
         saveClient(
                 new BankAccount(
                         accountNumber,
-                        getBalance(accountNumber)
+                        account.balance()
                                 .add(BigInteger.valueOf(amount))
                 )
         );
@@ -96,11 +103,12 @@ public class FileBankClientsService implements BankClientsService
     @Override
     public boolean withdraw(int accountNumber, long amount)
     {
+        BankAccount account = getClient(accountNumber);
         removeClient(accountNumber);
         saveClient(
                 new BankAccount(
                         accountNumber,
-                        getBalance(accountNumber)
+                        account.balance()
                                 .subtract(BigInteger.valueOf(amount))
                 )
         );
@@ -149,8 +157,6 @@ public class FileBankClientsService implements BankClientsService
     {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CLIENTS_FILE)))
         {
-            bw.write(bankAccounts.size() + "");
-            bw.newLine();
             for (BankAccount bankAccount : bankAccounts)
             {
                 bw.write(bankAccount.accountNumber() + "," + bankAccount.balance());
@@ -187,6 +193,25 @@ public class FileBankClientsService implements BankClientsService
         }
 
         return bankAccounts;
+    }
+
+    private BankAccount getClient(int accountNumber)
+    {
+        return loadClients().stream()
+                .filter(account -> account.accountNumber() == accountNumber)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void clearFile()
+    {
+        try (BufferedWriter _ = new BufferedWriter(new FileWriter(CLIENTS_FILE)))
+        {
+        }
+        catch (Exception e)
+        {
+            logger.error("Failed to clear file: {}", e.getMessage());
+        }
     }
 
     private void createSaveFileIfDoesNotExist()

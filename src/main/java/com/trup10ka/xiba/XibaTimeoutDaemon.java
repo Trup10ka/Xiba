@@ -49,4 +49,13 @@ public class XibaTimeoutDaemon
         }
         scheduleTimeout(clientChannel);
     }
+
+    public void removeTimeout(AsynchronousSocketChannel clientChannel)
+    {
+        ScheduledFuture<?> previousTask = clientConnectionHandlers.remove(clientChannel);
+        if (previousTask != null)
+        {
+            previousTask.cancel(false);
+        }
+    }
 }

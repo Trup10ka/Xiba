@@ -38,7 +38,14 @@ public class ClientConnectionHandler extends ClientHandler<AsynchronousSocketCha
     @Override
     public void failed(Throwable exc, AsynchronousServerSocketChannel attachment)
     {
-        logger.error("Failed to accept client connection, reason: {}", exc.getMessage());
+        if (attachment.isOpen())
+        {
+            logger.error("Failed to accept client connection, reason: {}", exc.getMessage());
+        }
+        else
+        {
+            logger.info("Server socket channel closed, no longer accepting client connections");
+        }
     }
 
     private void readFromClient(AsynchronousSocketChannel client)

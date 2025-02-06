@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BankClientsService
 {
-    boolean addClient();
+    int addClient();
 
     boolean removeClient(int accountNumber);
 

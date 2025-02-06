@@ -46,13 +46,14 @@ public class FileBankClientsService implements BankClientsService
     }
 
     @Override
-    public boolean addClient()
+    public int addClient()
     {
         int generatedAccountNumber = currentAccountNumberCursor++;
         BankAccount bankAccount = new BankAccount(generatedAccountNumber, BigInteger.ZERO);
-        saveClient(bankAccount);
+        if (!saveClient(bankAccount))
+            return -1;
         numberOfClients++;
-        return true;
+        return generatedAccountNumber;
     }
 
     @Override

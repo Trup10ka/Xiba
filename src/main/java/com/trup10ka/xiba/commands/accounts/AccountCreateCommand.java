@@ -6,13 +6,16 @@ import com.trup10ka.xiba.commands.CommandIdentifier;
 import com.trup10ka.xiba.data.BankClientsService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
 public class AccountCreateCommand extends BankServiceCommand
 {
+    private static final Logger logger = LoggerFactory.getLogger(AccountCreateCommand.class);
 
-    private InetSocketAddress address;
+    private final InetSocketAddress address;
 
     public AccountCreateCommand(@NotNull CommandIdentifier identifier, BankClientsService bankClientsService, InetSocketAddress address)
     {
@@ -23,15 +26,15 @@ public class AccountCreateCommand extends BankServiceCommand
     @Override
     public @NotNull String execute(@Nullable String args)
     {
-        boolean result = getBankClientsService().addClient();
-        return formatAnswer(result, 10100, address.getHostName());
+        int result = getBankClientsService().addClient();
+        return formatAnswer(result, address.getHostName());
     }
 
-    private String formatAnswer(boolean result, long accountNumber, String address)
+    private String formatAnswer(int result, String address)
     {
-        if (result)
+        if (result != -1)
         {
-            return "BC " + accountNumber + "/" + address;
+            return "AC " + result + "/" + address;
         }
         else
         {

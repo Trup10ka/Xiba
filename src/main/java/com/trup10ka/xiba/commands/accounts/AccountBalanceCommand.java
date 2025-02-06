@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
+import static com.trup10ka.xiba.util.ClientUtils.PROXY_SIGN;
+
 public class AccountBalanceCommand extends BankServiceCommand
 {
     private static final Logger logger = LoggerFactory.getLogger(AccountBalanceCommand.class);
@@ -40,6 +42,6 @@ public class AccountBalanceCommand extends BankServiceCommand
         if (parsedArguments.ip().equals(address.getHostName()))
             return "AB " + getBankClientsService().getBalance(parsedArguments.account()).toString();
         else
-            return "ER Invalid IP address"; // TODO: implement proxying
+            return PROXY_SIGN + "-" + getIdentifier() + " " + args;
     }
 }

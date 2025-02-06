@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
+import static com.trup10ka.xiba.util.ClientUtils.PROXY_SIGN;
+
 public class AccountWithdrawalCommand extends BankServiceCommand
 {
     private static final Logger logger = LoggerFactory.getLogger(AccountWithdrawalCommand.class);
@@ -43,8 +45,6 @@ public class AccountWithdrawalCommand extends BankServiceCommand
             return "AW";
         }
         else
-        {
-            return "ER Invalid IP address"; // TODO: implement proxying
-        }
+            return PROXY_SIGN + "-" + getIdentifier() + " " + args;
     }
 }

@@ -31,6 +31,7 @@ public class XibaTimeoutDaemon
         instance = this;
         this.config = config;
         this.clientConnectionHandlers = clientConnectionHandlers;
+        initAlreadyClosedClientGuard();
     }
 
     public void scheduleTimeout(AsynchronousSocketChannel client)
@@ -62,6 +63,18 @@ public class XibaTimeoutDaemon
         {
             previousTask.cancel(false);
         }
+    }
+
+    private void initAlreadyClosedClientGuard()
+    {
+        scheduler.scheduleAtFixedRate(() -> clientConnectionHandlers.forEach((client, _) ->
+        {
+            if (client.isOpen())
+                return;
+
+            logger.warn("Client {} was closed without proper disconnect", client);
+            removeTimeout(client);
+        }), 0, 700, TimeUnit.MILLISECONDS);
     }
 
     public static XibaTimeoutDaemon getInstance()

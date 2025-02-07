@@ -49,7 +49,8 @@ public class FileConfigLoader implements ConfigLoader
                             fileConfig.get("ranges.max-account-number"),
                             fileConfig.get("ranges.min-port"),
                             fileConfig.get("ranges.max-port")
-                    )
+                    ),
+                    fileConfig.get("robbery-plan.subnet-mask")
             );
         }
         catch (NullPointerException e)

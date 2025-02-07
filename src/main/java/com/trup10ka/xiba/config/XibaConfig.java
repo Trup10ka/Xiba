@@ -9,7 +9,8 @@ public record XibaConfig(
         @NotNull String hostAddress,
         int port,
         Timeouts timeouts,
-        Ranges ranges
+        Ranges ranges,
+        String bankRobberySubnetMask
 )
 {
 

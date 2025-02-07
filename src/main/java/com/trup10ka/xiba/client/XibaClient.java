@@ -1,5 +1,6 @@
 package com.trup10ka.xiba.client;
 
+import com.trup10ka.xiba.XibaServer;
 import com.trup10ka.xiba.config.XibaConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class XibaClient
             try (AsynchronousSocketChannel testChannel = AsynchronousSocketChannel.open())
             {
                 logger.info("Trying to connect to {}:{}", targetIp, port);
-                testChannel.connect(new InetSocketAddress(targetIp, port)).get(500, TimeUnit.MILLISECONDS);
+                testChannel.connect(new InetSocketAddress(targetIp, port)).get(XibaServer.getConfig().timeouts().proxyClientTimeout(), TimeUnit.MILLISECONDS);
                 logger.info("Found bank on {}:{}", targetIp, port);
                 return port;
             }

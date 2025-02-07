@@ -49,6 +49,6 @@ public class ProxyClientCommandCallHandler implements CompletionHandler<Integer,
     {
         ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
         logger.warn("Reading data from server of client {}", proxyChannel);
-        proxyChannel.read(buffer, XibaServer.getConfig().timeouts().clientTimeout(), TimeUnit.MILLISECONDS, buffer, new ProxyClientCommandResultHandler(client, proxyChannel));
+        proxyChannel.read(buffer, XibaServer.getConfig().timeouts().proxyClientTimeout(), TimeUnit.MILLISECONDS, buffer, new ProxyClientCommandResultHandler(client, proxyChannel));
     }
 }

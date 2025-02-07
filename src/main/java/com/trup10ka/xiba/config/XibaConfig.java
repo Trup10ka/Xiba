@@ -13,7 +13,7 @@ public record XibaConfig(
 )
 {
 
-    public record Timeouts(int clientTimeout, int sessionTimeout)
+    public record Timeouts(int clientTimeout, int proxyClientTimeout)
     {
     }
 

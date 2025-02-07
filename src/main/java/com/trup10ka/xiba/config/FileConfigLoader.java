@@ -42,7 +42,7 @@ public class FileConfigLoader implements ConfigLoader
                     fileConfig.get("port"),
                     new XibaConfig.Timeouts(
                             fileConfig.get("timeouts.client"),
-                            fileConfig.get("timeouts.session")
+                            fileConfig.get("timeouts.proxyClient")
                     ),
                     new XibaConfig.Ranges(
                             fileConfig.get("ranges.minAccountNumber"),

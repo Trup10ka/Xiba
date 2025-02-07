@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static com.trup10ka.xiba.util.ClientUtils.handleClientDisconnect;
 import static com.trup10ka.xiba.util.ClientUtils.processClientData;
 
 public class ProxyClientCommandResultHandler implements CompletionHandler<Integer, ByteBuffer>
@@ -48,10 +49,13 @@ public class ProxyClientCommandResultHandler implements CompletionHandler<Intege
             String command = clientStringBuffer.toString();
             clientStringBuffer.setLength(0);
             logger.info("Received response from server {}: {}", proxyClient, command);
+
+            handleClientDisconnect(proxyClient, "Proxy client no longer in use, disconnecting");
+            logger.info("Proxy client {} disconnected", proxyClient);
             client.write(ByteBuffer.wrap(command.getBytes()), client, new ProxyClientReadResultHandler(client));
         }
         else
-            proxyClient.read(clientBuffer, XibaServer.getConfig().timeouts().clientTimeout(), TimeUnit.MILLISECONDS, clientBuffer, this);
+            proxyClient.read(clientBuffer, XibaServer.getConfig().timeouts().proxyClientTimeout(), TimeUnit.MILLISECONDS, clientBuffer, this);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class AccountBalanceCommand extends BankServiceCommand
             return "ER Invalid IP address or none provided";
         }
 
-        if (parsedArguments.ip().equals(address.getHostName()))
+        if (parsedArguments.ip().equals(address.getHostString()))
             return "AB " + getBankClientsService().getBalance(parsedArguments.account()).toString();
         else
             return PROXY_SIGN + "-" + getIdentifier() + " " + args;

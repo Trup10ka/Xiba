@@ -38,7 +38,7 @@ public class AccountRemoveCommand extends BankServiceCommand
             logger.error("Invalid IP address or none provided, provided ip: {}", parsedArguments.ip());
             return "ER Invalid IP address or none provided";
         }
-        if (parsedArguments.ip().equals(address.getHostName()))
+        if (parsedArguments.ip().equals(address.getHostString()))
         {
             getBankClientsService().removeClient(parsedArguments.account());
             return "AR";

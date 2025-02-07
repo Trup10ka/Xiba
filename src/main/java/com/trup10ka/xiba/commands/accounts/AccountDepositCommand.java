@@ -44,7 +44,7 @@ public class AccountDepositCommand extends BankServiceCommand
             return "ER Invalid value or no value provided";
         }
 
-        if (parsedArguments.ip().equals(address.getHostName()))
+        if (parsedArguments.ip().equals(address.getHostString()))
         {
             getBankClientsService().deposit(parsedArguments.account(), parsedArguments.value());
             return "AD";

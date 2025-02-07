@@ -39,7 +39,7 @@ public class AccountWithdrawalCommand extends BankServiceCommand
             logger.error("Invalid IP address or none provided, provided ip: {}", parsedArguments.ip());
             return "ER Invalid IP address or none provided";
         }
-        if (parsedArguments.ip().equals(address.getHostName()))
+        if (parsedArguments.ip().equals(address.getHostString()))
         {
             getBankClientsService().withdraw(parsedArguments.account(), parsedArguments.value());
             return "AW";

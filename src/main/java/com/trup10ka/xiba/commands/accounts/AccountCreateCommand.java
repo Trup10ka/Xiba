@@ -27,7 +27,7 @@ public class AccountCreateCommand extends BankServiceCommand
     public @NotNull String execute(@Nullable String args)
     {
         int result = getBankClientsService().addClient();
-        return formatAnswer(result, address.getHostName());
+        return formatAnswer(result, address.getHostString());
     }
 
     private String formatAnswer(int result, String address)

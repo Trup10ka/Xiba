@@ -2,12 +2,7 @@ package com.trup10ka.xiba;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.trup10ka.xiba.commands.CommandManager;
-import com.trup10ka.xiba.config.FileConfigLoader;
-import com.trup10ka.xiba.config.XibaConfig;
-import com.trup10ka.xiba.data.BankAccount;
-import com.trup10ka.xiba.data.BankClientsService;
 import com.trup10ka.xiba.data.FileBankClientsService;
-import com.trup10ka.xiba.util.ConsoleColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

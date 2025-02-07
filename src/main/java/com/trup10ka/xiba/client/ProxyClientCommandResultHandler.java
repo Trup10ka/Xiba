@@ -52,7 +52,7 @@ public class ProxyClientCommandResultHandler implements CompletionHandler<Intege
 
             handleClientDisconnect(proxyClient, "Proxy client no longer in use, disconnecting");
             logger.info("Proxy client {} disconnected", proxyClient);
-            client.write(ByteBuffer.wrap(command.getBytes()), client, new ProxyClientReadResultHandler(client));
+            client.write(ByteBuffer.wrap(command.trim().getBytes()), client, new ProxyClientReadResultHandler(client));
         }
         else
             proxyClient.read(clientBuffer, XibaServer.getConfig().timeouts().proxyClientTimeout(), TimeUnit.MILLISECONDS, clientBuffer, this);

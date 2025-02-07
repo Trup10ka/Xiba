@@ -4,6 +4,7 @@ import com.trup10ka.xiba.commands.accounts.*;
 import com.trup10ka.xiba.commands.bank.BankCodeCommand;
 import com.trup10ka.xiba.commands.bank.BankTotalClientsCommand;
 import com.trup10ka.xiba.commands.bank.BankTotalCommand;
+import com.trup10ka.xiba.commands.bank.RobberyPlanCommand;
 import com.trup10ka.xiba.config.XibaConfig;
 import com.trup10ka.xiba.data.BankClientsService;
 
@@ -62,6 +63,11 @@ public class CommandManager
         commands.put(ACCOUNT_REMOVE, new AccountRemoveCommand(
                     ACCOUNT_REMOVE,
                     bankClientsService,
+                    config.getSocketAddress()
+                )
+        );
+        commands.put(ROBBERY_PLAN, new RobberyPlanCommand(
+                    ROBBERY_PLAN,
                     config.getSocketAddress()
                 )
         );

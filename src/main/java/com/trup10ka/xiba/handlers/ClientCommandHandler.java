@@ -78,8 +78,8 @@ public class ClientCommandHandler extends ClientHandler<Integer, AsynchronousSoc
         logger.info("Client {} requested proxying", client);
         try
         {
-            XibaClient xibaClient = new XibaClient(XibaServer.getConfig(), client);
-            int port = xibaClient.findBank(executionResult.split(" ")[1].split("/")[1]);
+            XibaClient xibaClient = new XibaClient(client);
+            int port = XibaClient.findBank(executionResult.split(" ")[1].split("/")[1]);
             if (port != -1)
             {
                 xibaClient.executeProxyCommand(executionResult.split(" ")[1].split("/")[1], port, command);

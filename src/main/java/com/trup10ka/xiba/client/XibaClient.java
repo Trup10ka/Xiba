@@ -14,20 +14,19 @@ public class XibaClient
 {
     private static final Logger logger = LoggerFactory.getLogger(XibaClient.class);
 
-    private final XibaConfig config;
-
     private final AsynchronousSocketChannel proxyChannel;
 
     private final AsynchronousSocketChannel client;
 
-    public XibaClient(XibaConfig config, AsynchronousSocketChannel client) throws IOException
+    private static final XibaConfig config = XibaServer.getConfig();
+
+    public XibaClient(AsynchronousSocketChannel client) throws IOException
     {
-        this.config = config;
         this.client = client;
         this.proxyChannel = AsynchronousSocketChannel.open();
     }
 
-    public int findBank(String targetIp)
+    public static int findBank(String targetIp)
     {
         logger.info("Finding bank on IP: {}", targetIp);
         for (int port = config.ranges().minPort(); port <= config.ranges().maxPort(); port++)
@@ -41,7 +40,7 @@ public class XibaClient
             }
             catch (Exception exception)
             {
-                logger.warn("Failed to connect to {}:{}, reason: {}", targetIp, port, exception.getMessage());
+                logger.warn("Failed to connect to {}:{}, reason: serve did not respond or request timed out", targetIp, port);
             }
         }
         return -1;

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.trup10ka.xiba"
-version = "0.0.1"
+version = "0.1-aplha.2"
 
 /* ==== Config ==== */
 var hoconParserVersion = "3.8.1"
@@ -42,12 +42,20 @@ application {
     mainClass.set("com.trup10ka.xiba.Main")
 }
 
+tasks {
+    shadowJar {
+        archiveBaseName.set("xiba")
+        archiveVersion.set(version.toString())
+        archiveClassifier.set("")
+    }
+    
+    test {
+        useJUnitPlatform()
+    }
+}
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(22))
     }
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

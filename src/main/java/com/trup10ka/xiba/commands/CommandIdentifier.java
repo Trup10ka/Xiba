@@ -12,6 +12,7 @@ public enum CommandIdentifier
     BANK_CODE("bc"),
     BANK_AMOUNT("ba"),
     BANK_NUMBER_OF_CLIENTS("bn"),
+    ROBBERY_PLAN("rp"),
 
     /* ==== Account commands ==== */
     ACCOUNT_CREATE("ac"),

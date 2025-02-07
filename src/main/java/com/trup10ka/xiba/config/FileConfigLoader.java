@@ -42,13 +42,13 @@ public class FileConfigLoader implements ConfigLoader
                     fileConfig.get("port"),
                     new XibaConfig.Timeouts(
                             fileConfig.get("timeouts.client"),
-                            fileConfig.get("timeouts.proxyClient")
+                            fileConfig.get("timeouts.proxy-client")
                     ),
                     new XibaConfig.Ranges(
-                            fileConfig.get("ranges.minAccountNumber"),
-                            fileConfig.get("ranges.maxAccountNumber"),
-                            fileConfig.get("ranges.minPort"),
-                            fileConfig.get("ranges.maxPort")
+                            fileConfig.get("ranges.min-account-number"),
+                            fileConfig.get("ranges.max-account-number"),
+                            fileConfig.get("ranges.min-port"),
+                            fileConfig.get("ranges.max-port")
                     )
             );
         }

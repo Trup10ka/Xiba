@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.trup10ka.xiba"
-version = "0.1-aplha.2"
+version = "0.2-aplha.0"
 
 /* ==== Config ==== */
 var hoconParserVersion = "3.8.1"

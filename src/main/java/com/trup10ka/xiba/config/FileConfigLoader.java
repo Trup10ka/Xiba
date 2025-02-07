@@ -50,7 +50,10 @@ public class FileConfigLoader implements ConfigLoader
                             fileConfig.get("ranges.min-port"),
                             fileConfig.get("ranges.max-port")
                     ),
-                    fileConfig.get("robbery-plan.subnet-mask")
+                    new XibaConfig.BankRobbery(
+                            fileConfig.get("robbery-plan.subnet-mask"),
+                            fileConfig.get("robbery-plan.max-pool-size")
+                    )
             );
         }
         catch (NullPointerException e)

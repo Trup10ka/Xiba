@@ -10,7 +10,7 @@ public record XibaConfig(
         int port,
         Timeouts timeouts,
         Ranges ranges,
-        String bankRobberySubnetMask
+        BankRobbery bankRobbery
 )
 {
 
@@ -19,6 +19,10 @@ public record XibaConfig(
     }
 
     public record Ranges(int minAccountNumber, int maxAccountNumber, int minPort, int maxPort)
+    {
+    }
+
+    public record BankRobbery(String bankRobberySubnetMask, int maxPoolSize)
     {
     }
 

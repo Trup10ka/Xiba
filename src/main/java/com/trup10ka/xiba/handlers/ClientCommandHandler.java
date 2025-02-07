@@ -80,7 +80,6 @@ public class ClientCommandHandler extends ClientHandler<Integer, AsynchronousSoc
         {
             XibaClient xibaClient = new XibaClient(XibaServer.getConfig(), client);
             int port = xibaClient.findBank(executionResult.split(" ")[1].split("/")[1]);
-            Thread.sleep(500);
             if (port != -1)
             {
                 xibaClient.executeProxyCommand(executionResult.split(" ")[1].split("/")[1], port, command);
@@ -88,15 +87,12 @@ public class ClientCommandHandler extends ClientHandler<Integer, AsynchronousSoc
             }
 
             logger.error("Failed to find available port for proxying to client request bank: {}", executionResult.split(" ")[1]);
-            sendErrorMessageToClient(client, "Failed to find available port for proxying, please try again later", clientInputReaderHandler);
+            sendErrorMessageToClient(client, "Failed to find available port for proxying", clientInputReaderHandler);
         }
         catch (IOException e)
         {
             logger.error("Failed to create XibaClient instance: {}", e.getMessage());
-            sendErrorMessageToClient(client, "Failed to create proxy client, please try again later", clientInputReaderHandler);
-        } catch (InterruptedException e)
-        {
-            throw new RuntimeException(e);
+            sendErrorMessageToClient(client, "Failed to create proxy client, please try again later, cannot open more connections", clientInputReaderHandler);
         }
     }
 }

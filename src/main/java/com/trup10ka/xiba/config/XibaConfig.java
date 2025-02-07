@@ -22,7 +22,7 @@ public record XibaConfig(
     {
     }
 
-    public record BankRobbery(String bankRobberySubnetMask, int maxPoolSize)
+    public record BankRobbery(String bankRobberySubnetMask, int maxPoolSize, int commandTimeout)
     {
     }
 

@@ -52,7 +52,8 @@ public class FileConfigLoader implements ConfigLoader
                     ),
                     new XibaConfig.BankRobbery(
                             fileConfig.get("robbery-plan.subnet-mask"),
-                            fileConfig.get("robbery-plan.max-pool-size")
+                            fileConfig.get("robbery-plan.max-pool-size"),
+                            fileConfig.get("robbery-plan.command-timeout")
                     )
             );
         }

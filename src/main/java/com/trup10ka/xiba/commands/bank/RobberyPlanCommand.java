@@ -42,8 +42,8 @@ public class RobberyPlanCommand extends Command
             logger.error("Client provided an invalid target amount for the robbery plan: {}", args);
             return "ER Invalid target amount";
         }
+
         BankCrawler bankCrawler = new BankCrawler();
-        logger.info("CIDR mask: {}", address.getHostString() + XibaServer.getConfig().bankRobbery().bankRobberySubnetMask());
         List<BankData> banks = bankCrawler.crawlBanks(address.getHostString() + XibaServer.getConfig().bankRobbery().bankRobberySubnetMask());
         List<BankData> bestPlan = planRobbery(banks, BigInteger.valueOf(targetAmount));
 
@@ -55,10 +55,18 @@ public class RobberyPlanCommand extends Command
         return "RP The best plan is to rob these banks: " + formatedBanks;
     }
 
+    /**
+     * Finds the optimal robbery plan to reach as close as possible to the target amount while affecting the fewest number of clients.
+     * @param banks The list of available banks to consider for the robbery.
+     * @param targetAmount The target amount of money to be robbed.
+     * @return The optimal robbery plan - banks to be robbed.
+     */
     public static List<BankData> planRobbery(List<BankData> banks, BigInteger targetAmount)
     {
         // Sort banks: First by highest bankTotal, then by lowest numberOfClients
-        banks.sort(Comparator.comparing(BankData::bankTotal).reversed()
+        banks.sort(Comparator
+                .comparing(BankData::bankTotal)
+                .reversed()
                 .thenComparingInt(BankData::numberOfClients));
 
         List<BankData> bestPlan = new ArrayList<>();
@@ -66,15 +74,27 @@ public class RobberyPlanCommand extends Command
         return bestPlan;
     }
 
-    private static void findOptimalPlan(List<BankData> banks,
-                                        int index,
-                                        BigInteger currentTotal,
-                                        BigInteger target,
-                                        List<BankData> currentPlan,
-                                        List<BankData> bestPlan
+    /**
+     * Recursively finds the optimal robbery plan to reach as close as possible to the target amount
+     * while affecting the fewest number of clients.
+     *
+     * @param banks        The list of available banks to consider for the robbery.
+     * @param index        The current index of the bank being considered in the recursion.
+     * @param currentTotal The sum of money collected so far from the selected banks.
+     * @param target       The target amount of money to be robbed.
+     * @param currentPlan  The list of banks currently selected in this recursive branch.
+     * @param bestPlan     The best robbery plan found so far, minimizing the number of affected clients.
+     */
+    private static void findOptimalPlan(
+            List<BankData> banks,
+            int index,
+            BigInteger currentTotal,
+            BigInteger target,
+            List<BankData> currentPlan,
+            List<BankData> bestPlan
     )
     {
-        // If we reach the target or exceed it, check if it's the best solution
+        // If we reach or exceed the target, check if this plan is better than the current best
         if (currentTotal.compareTo(target) >= 0)
         {
             if (bestPlan.isEmpty() || getClientCount(currentPlan) < getClientCount(bestPlan))
@@ -85,18 +105,23 @@ public class RobberyPlanCommand extends Command
             return;
         }
 
-        // If no more banks to process, return
+        // If all banks have been considered, return
         if (index >= banks.size()) return;
 
-        // Try including this bank
+        // Include the current bank in the plan and proceed with recursion
         currentPlan.add(banks.get(index));
         findOptimalPlan(banks, index + 1, currentTotal.add(banks.get(index).bankTotal()), target, currentPlan, bestPlan);
         currentPlan.removeLast();
 
-        // Try skipping this bank
+        // Exclude the current bank and proceed with recursion
         findOptimalPlan(banks, index + 1, currentTotal, target, currentPlan, bestPlan);
     }
 
+    /**
+     * Returns the total number of clients affected by the robbery plan.
+     * @param banks The list of banks to consider.
+     * @return The total number of clients affected by the robbery plan.
+     */
     private static int getClientCount(List<BankData> banks)
     {
         return banks.stream().mapToInt(BankData::numberOfClients).sum();
@@ -107,7 +132,7 @@ public class RobberyPlanCommand extends Command
         StringBuilder builder = new StringBuilder();
         for (BankData bank : banks)
         {
-            builder.append("[").append(bank.address()).append(" | ").append(bank.numberOfClients()).append(" | ").append(bank.bankTotal()).append("] ");
+            builder.append(bank.toString()).append(" | ");
         }
         return builder.toString();
     }
